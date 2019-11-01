@@ -1,28 +1,111 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <el-container style='height:100%'>
+    <el-aside width='100px'>
+      <el-menu>
+        <el-menu-item index='1'>
+          <router-link to='/univs'>University</router-link>
+        </el-menu-item>
+        <el-menu-item index='2'>
+          <router-link to='/match'>Guide</router-link>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+    <el-container>
+      <el-header>US School Report</el-header>
+      <el-main>
+        <router-view class='view'></router-view>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
+<style>
+.el-table td,
+.el-table th {
+  padding: 5px 0
+}
+</style>
+
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  data: () => {
+    return {
+      clipped: true,
+      drawer: true,
+      fixed: false,
+      items: [
+        {
+          icon: 'account_circle',
+          title: 'Universities',
+          href: '/#/univs',
+          router: true
+        },
+        {
+          icon: 'match',
+          title: 'Match',
+          href: '/#/match',
+          router: true
+        },
+        {
+          icon: 'account_circle',
+          title: 'Housing',
+          href: '/#/house'
+        }
+      ],
+      miniVariant: false,
+      right: true,
+      rightDrawer: false,
+      title: 'US School Report',
+      alertOpen: false,
+      alertString: '',
+      alertSuccess: false,
+      isDarkMode: false
+    }
+  },
+
+  watch: {
+    isDarkMode() {
+      if (!this.isDarkMode) {
+        //NOT dark mode
+        this.$vuetify.theme = {
+          primary: '#0D47A1', //Main color
+          primaryText: '#FFFFFF', //Color for text on primary
+          secondary: '#90CAF9', //Color for active nav
+          lightText: '#000000'
+        }
+      } else {
+        //Dark mode
+        this.$vuetify.theme = {
+          primary: '#424242', //Main color
+          primaryText: '#FFFFFF', //Color for text on primary
+          secondary: '#90CAF9', //Color for active nav
+          lightText: '#FFFFFF'
+        }
+      }
+    }
+  },
+
+  methods: {
+    alert(success, callName, resource) {
+      this.alertOpen = false
+      this.alertString = callName + ' ' + resource
+      if (success) {
+        this.alertSuccess = true
+        this.alertString += ' was successful.'
+      } else {
+        this.alertSuccess = false
+        this.alertString += ' has failed.'
+      }
+      this.alertOpen = true
+    },
+
+    getNavClass(href) {
+      if (this.$route.fullPath == href.substring(2)) {
+        return 'secondary primaryText--text'
+      } else {
+        return 'primary primaryText--text'
+      }
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
